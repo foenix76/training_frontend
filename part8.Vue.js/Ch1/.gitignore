@@ -1,0 +1,32 @@
+# Node modules
+node_modules/
+
+# 디버깅 및 빌드 디렉토리
+/dist/
+/build/
+/.cache/
+/.eslintcache
+
+# IDE 설정 파일
+.vscode/
+.idea/
+
+# 환경 설정 파일
+.env
+.env.local
+.env.*.local
+
+# 로그 파일
+*.log
+
+# OS 관련 파일
+.DS_Store
+Thumbs.db
+
+# npm 로그
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Vue 프로젝트의 경우
+.vite/
