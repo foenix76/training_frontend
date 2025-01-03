@@ -46,9 +46,9 @@ _이텔릭_
 [GOOGLE](https://google.com)
 
 # 이미지(Images)
-![MY_SON](https://github.com/foenix76/training_frontend/son_young.jpg)  
+![MY_SON](https://raw.githubusercontent.com/foenix76/training_frontend/refs/heads/main/son_young.jpg)  
 이미지 + 링크  
-[![MY_SON](https://github.com/foenix76/training_frontend/son_young.jpg)](https://dev.hi.ne.kr)
+[![MY_SON](https://raw.githubusercontent.com/foenix76/training_frontend/refs/heads/main/son_young.jpg)](https://dev.hi.ne.kr)
 
 마크다운의 한계 : 이미지 크기 조절을 위해서는 원시태그를 사용할 수 밖에 없음  
 
