@@ -73,18 +73,24 @@ Vue CLI v5.0.8
   To create a production build, run npm run build.
 ```
 
+# vscode 플러그인
+vetur (린팅을 위해 설치)
+
 # 소스 설명
 main.js에서 createApp(App).mount('#app')를 통해 index.html파일의 div id="app"에 App.vue를 연결해준다.  
 또한 App.vue파일은 HelloWorld.vue을 콤포넌트로 가지고 있음.  
 App.vue에서 호출 시 msg의 값으로 문자열을 줘서 해당 값의 메세지를 출력한다.  
 \<HelloWorld msg="Welcome to Your Vue.js App"\/>
 
-# 솔직히 처음 Vue를 불러오는 부분이 이해가 안가서 정리해봄
+App.vue는 크게 3부분으로 나뉜다. template, script, style  
+
+# Vue.createApp().mount()에서 대체 무슨일이?
 사실 이런거 몰라도 그냥저냥 개발 하긴 했으나 이젠 마음껏 물어볼 AI도 있으니 그러지 않기로 했다.  
 vue라이브러리를 임포트하면 Vue라는 전역 객체를 사용할 수 있다.  
 Vue.createApp().mount()는 Vue전역객체에 메소드체이닝으로 메소드 2개를 실행하는 것으로 시작함  
 Vue.createApp().mount("css선택자")를 넘기게 되면 해당 css선택자를 가진 엘리먼트에서 viewjs문법을 사용할 수 있게 된다.  
-또한 createApp메서드에 인자로 넘기는 것은 루트 컴포넌트이고 루트 컴포넌트가 return하는 데이터에 따라 반응성(Reactivity)있게 엘리먼트에 값이 표시된다.
+또한 createApp메서드에 인자로 넘기는 것은 루트 컴포넌트이고 루트 컴포넌트가 return하는 데이터에 따라 반응성(Reactivity)있게 엘리먼트에 값이 표시된다.  
+(참고로 Vue.으로 객체를 불러오는건 2.x대 버전 한정임)  
 ```javascript
 Vue.createApp({
   data: function () { // data는 속성이 아니고 메서드
@@ -98,12 +104,12 @@ Vue.createApp({
 }).mount("#app")
 ```
 
-# 쓸데없는 내용 추가
+# data: function(){} 을 data(){}로 줄이는게 왜 가능할까?
 ChatGPT를 비롯한 AI가 정말 좋은게 수준이 너무 낮은 질문이라 남한테 물어보기 어렵거나 구글링으로도 이해가 잘 안가는걸 물어보기에 너무 좋다는 점이다.  
 이제는 초급개발자만 되도 AI만 잘 쓰면 그 어떤 것도 개발이 가능할 것 같음. 사수가 필요 없을듯? (물론 좋은 동료들이 있다면 더 좋겠지만...  ^^)  
-그리고 나처럼 나이가 많은 개발자는 AI를 활용하면서 빠르게 신기술을 익히지 않으면 경쟁에서 도태될 것이 틀림없다.  
+그리고 나처럼 나이가 많은 개발자는 AI를 활용하면서 경쟁자들 보다 더욱 빠르게 신기술을 익히지 않으면 경쟁에서 도태될 것이 틀림없다. 정신 바짝 차려야함!  
 
-위의 소스에서 data: function(){} 을 data(){}로 줄이는게 왜 가능한건지 질문했더니 너무 훌륭한 답변이 돌아와서 첨부해본다.  
+각설하고, 위의 소스에서 data: function(){} 을 data(){}로 줄이는게 왜 가능한건지 질문했더니 너무 훌륭한 답변이 돌아와서 첨부해본다.  
 (사실 그냥 ES5, 6의 문법차이였음)
 
 ## 자바스크립트 객체 메서드 정의 방법
@@ -161,22 +167,177 @@ const obj2 = {
 obj1.data(); // ES5 방식
 obj2.data(); // ES6 방식
 ```
-
+    
 ---
 
 ### **결론**  
 - 최신 문법(ES6)의 축약형 `data()`를 사용하는 것이 더 간결하고 가독성이 좋습니다.  
-- 여전히 ES5 문법을 사용할 수는 있지만, 새 프로젝트에서는 **ES6 방식을 추천**합니다.
+- 여전히 ES5 문법을 사용할 수는 있지만, 새 프로젝트에서는 **ES6 방식을 추천**합니다.  
 
-
-
-# 2와 3의 Vue객체 차이에 대해 물어본 내용 (무료플랜 한계로 답변을 마크다운으로 못 옮김)
+# 2.x에서 보이던 Vue객체가 안보여서 2와 3의 Vue객체 차이에 대해 물어봤다. 
 import { aaa } from 'vue'
-위 임포트 구문에서 'vue'를 따라가보면 vue.d.ts라는 파일이 있는데 그 안에 Vue객체가 든게 맞지? 근데 어디서 Vue를 볼 수 있을까?
+위 임포트 구문에서 'vue'를 따라가보면 vue.d.ts라는 파일이 있는데 그 안에 Vue객체가 든게 맞지?  
 
-콕 찝어서 "Vue"라는 문자열이 vue.runtime.esm-bundler.js 소스 안에도 안보이던데 내가 이해할 수 있도록 좀 더 쉽게 설명 가능할까?
-아니면 Vue.메소드 형식으로 어떻게 사용이 가능한지 설명해줘도 되고
+위 구문에서 'vue'는 Vue 패키지를 의미합니다. 이 패키지는 node_modules/vue 디렉터리 아래에 위치하며, 해당 디렉터리 내의 타입 정의 파일인 vue.d.ts를 참조합니다.
 
-Part 8. Vue.js Ch.04부터 볼 것
+Vue 3에서는 Vue 객체가 기본적으로 더 이상 제공되지 않습니다. 대신 Composition API와 setup 함수를 기반으로 한 사용 방식이 주로 권장됩니다. Vue 2.x에서는 Vue라는 클래스를 직접 인스턴스화하여 사용할 수 있었지만, Vue 3에서는 이러한 접근이 변경되었습니다.  
+
+(아하.. 그래서 2.x에서만 보였던 거구만!)  
+
+# Vue 2.x vs Vue 3.x 주요 차이점
+
+## 1. 초기화 및 마운팅 방식
+### Vue 2.x
+```javascript
+import Vue from 'vue';
+import App from './App.vue';
+
+new Vue({
+  render: (h) => h(App),
+}).$mount('#app');
+```
+
+### Vue 3.x
+```javascript
+import { createApp } from 'vue';
+import App from './App.vue';
+
+createApp(App).mount('#app');
+```
+
+**변경점:**  
+- Vue 2에서는 `Vue` 객체를 직접 인스턴스화(`new Vue`)했지만, Vue 3에서는 `createApp` 함수를 사용하여 애플리케이션 인스턴스를 생성합니다.  
+- `createApp`은 플러그인 등록과 컴포넌트 설정을 캡슐화하는 새로운 구조를 제공합니다.
+
+---
+
+## 2. 컴포넌트 등록 방식
+### Vue 2.x
+```javascript
+Vue.component('MyComponent', {
+  template: '<div>Hello!</div>',
+});
+```
+
+### Vue 3.x
+```javascript
+import MyComponent from './MyComponent.vue';
+
+const app = createApp(App);
+app.component('MyComponent', MyComponent);
+app.mount('#app');
+```
+
+**변경점:**  
+- 전역 컴포넌트 등록이 `Vue.component`에서 `app.component`로 변경되었습니다.  
+- 앱 인스턴스 수준에서 관리되므로, 모듈화와 테스트가 더 쉬워졌습니다.
+
+---
+
+## 3. Options API vs Composition API
+### Vue 2.x - Options API
+```javascript
+export default {
+  data() {
+    return {
+      message: 'Hello Vue!',
+    };
+  },
+  methods: {
+    greet() {
+      console.log(this.message);
+    },
+  },
+  mounted() {
+    this.greet();
+  },
+};
+```
+
+### Vue 3.x - Composition API
+```javascript
+import { ref, onMounted } from 'vue';
+
+export default {
+  setup() {
+    const message = ref('Hello Vue!');
+    const greet = () => console.log(message.value);
+
+    onMounted(() => {
+      greet();
+    });
+
+    return {
+      message,
+      greet,
+    };
+  },
+};
+```
+
+**변경점:**  
+- Vue 3는 **Composition API**를 도입하여 코드의 재사용성과 가독성을 크게 개선했습니다.  
+- `ref`와 `reactive`를 사용하여 상태 관리가 이루어집니다.  
+- 라이프사이클 훅도 함수 기반으로 관리되며, 코드의 논리적 그룹화가 훨씬 용이해졌습니다.
+
+---
+
+## 4. 반응형 시스템 개선
+### Vue 2.x
+- `Object.defineProperty`를 사용하여 반응형 시스템을 구성했습니다.  
+- 배열과 객체의 속성 추가/삭제에 제한이 있었습니다.  
+
+### Vue 3.x
+- **Proxy API**를 기반으로 반응형 시스템을 구축했습니다.  
+- 깊은 속성도 자동 추적할 수 있고, 성능도 개선되었습니다.  
+
+예시:  
+```javascript
+const state = reactive({ count: 0 });
+state.count++; // 반응형 업데이트
+```
+
+---
+
+## 5. Teleport 및 Fragments 지원
+### Teleport
+다른 DOM 요소로 직접 렌더링을 지원합니다.  
+```html
+<teleport to="#modal-root">
+  <div>모달 내용</div>
+</teleport>
+```
+
+### Fragments
+여러 루트 요소를 지원합니다.  
+```html
+<template>
+  <h1>Title</h1>
+  <p>Content</p>
+</template>
+```
+
+---
+
+## 6. Typescript 지원 강화
+Vue 3는 타입스크립트와 완벽하게 통합되도록 설계되었습니다.  
+```typescript
+import { defineComponent, ref } from 'vue';
+
+export default defineComponent({
+  setup() {
+    const count = ref<number>(0);
+    return { count };
+  },
+});
+```
+
+---
+
+## 결론
+- Vue 3는 함수 기반의 Composition API를 도입해 코드의 구조와 재사용성을 크게 개선했습니다.  
+- Proxy를 기반으로 한 반응형 시스템은 더 강력하고 직관적입니다.  
+- TypeScript와의 호환성이 강화되었고, Teleport와 Fragment 같은 새로운 기능도 추가되었습니다.  
+
 
 
