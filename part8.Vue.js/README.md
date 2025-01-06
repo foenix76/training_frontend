@@ -74,7 +74,7 @@ Vue CLI v5.0.8
 ```
 
 # vscode 플러그인
-vetur (린팅을 위해 설치)
+vue-official (vscode에 추천 플러그인으로 뜸)
 
 # 소스 설명
 main.js에서 createApp(App).mount('#app')를 통해 index.html파일의 div id="app"에 App.vue를 연결해준다.  
