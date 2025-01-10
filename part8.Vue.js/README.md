@@ -86,11 +86,62 @@ App.vue는 크게 3부분으로 나뉜다. template, script, style
 
 # Vue.createApp().mount()에서 대체 무슨일이?
 사실 이런거 몰라도 그냥저냥 개발 하긴 했으나 이젠 마음껏 물어볼 AI도 있으니 그러지 않기로 했다.  
-vue라이브러리를 임포트하면 Vue라는 전역 객체를 사용할 수 있다.  
+vue라이브러리를 임포트하면 Vue라는 전역 객체를 사용할 수 있다. (이건 Vue3 글로벌빌드 한정)  
 Vue.createApp().mount()는 Vue전역객체에 메소드체이닝으로 메소드 2개를 실행하는 것으로 시작함  
 Vue.createApp().mount("css선택자")를 넘기게 되면 해당 css선택자를 가진 엘리먼트에서 viewjs문법을 사용할 수 있게 된다.  
 또한 createApp메서드에 인자로 넘기는 것은 루트 컴포넌트이고 루트 컴포넌트가 return하는 데이터에 따라 반응성(Reactivity)있게 엘리먼트에 값이 표시된다.  
-(참고로 Vue.으로 객체를 불러오는건 2.x대 버전 한정임)  
+(참고로 Vue.으로 객체를 불러오는건 2.x대 버전 한정임) -> 아니다! 이게 틀린 내용이었다.  이하 설명함  
+
+Vue2던 Vue3던 간에 번들러 없이 기 개발된 웹사이트에 점진적으로 Vue를 적용할때, 또는 학습목적등으로 사용시 CDN을 통한 Vue의 글로벌 빌드 임포트 방식으로 사용하는데 이 방식은 빌드과정이 없이 즉시 사용할 수 있다는 장점이 있지만 모듈화가 어렵고, 큰 프로젝트에 적합하지 않다.  
+이 글로벌 빌드 임포트 방식에서는 Vue 전역 객체를 이용하여 인스턴스를 생성할 수 있다.  
+단점은 싱글 파일 컴포넌트(SFC) 구문을 사용할 수 없다는 것  
+
+Vue 2: 전역 객체 Vue를 사용하여 바로 인스턴스를 생성 (new Vue)  
+```html
+<!-- Vue2 글로벌 빌드 -->
+<script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
+<script>
+  // 전역 객체 Vue를 통해 인스턴스 생성
+  new Vue({
+    el: '#app',
+    data: {
+      message: 'Hello Vue 2!'
+    }
+  });
+</script>
+```
+Vue 3: 전역 객체 Vue를 사용하여 createApp을 호출한 뒤, 생성된 애플리케이션 인스턴스를 마운트.  
+```html
+<!-- Vue3 글로벌 빌드 -->
+<script src="https://cdn.jsdelivr.net/npm/vue@3"></script>
+<script>
+  // 전역 객체 Vue를 통해 createApp 사용
+  const app = Vue.createApp({
+    data() {
+      return {
+        message: 'Hello Vue 3!'
+      };
+    }
+  });
+
+  app.mount('#app');
+</script>
+
+```
+Vue.createApp으로 vue인스턴스를 생성하는 인터넷의 일부 예제 때문에 헷갈리는 내용이 있었는데 Vue3는 인스턴스 생성시 다음과 같이 Vue전역객체 없이 구조분해를 통해 createApp을 불러서 생성해야 하는걸로 알았는데 이게 Vue3라이브러리가 글로벌빌드 버전이냐 일반 버전이냐의 차이에서 기인한 것이었다.  
+
+그러니까 뷰 인스턴스 생성시
+new Vue({}) 이면 2.X 글로벌/일반, Vue.createApp이면 Vue3.x글로벌, Vue전역객체 없이 createApp이면 Vue3일반설치인 셈.  
+```js
+// Vue3 일반 빌드 (웹팩, vite 등의 번들러가 필요함)
+import { createApp } from 'vue'
+
+const app = createApp({
+  /* 최상위 컴포넌트 옵션 */
+})
+```
+
+# Vue3인스턴스 생성시 data: function(){} 을 data(){}로 줄이는게 왜 가능할까?
 ```javascript
 Vue.createApp({
   data: function () { // data는 속성이 아니고 메서드
@@ -103,8 +154,6 @@ Vue.createApp({
   }
 }).mount("#app")
 ```
-
-# data: function(){} 을 data(){}로 줄이는게 왜 가능할까?
 ChatGPT를 비롯한 AI가 정말 좋은게 수준이 너무 낮은 질문이라 남한테 물어보기 어렵거나 구글링으로도 이해가 잘 안가는걸 물어보기에 너무 좋다는 점이다.  
 이제는 초급개발자만 되도 AI만 잘 쓰면 그 어떤 것도 개발이 가능할 것 같음. 사수가 필요 없을듯? (물론 좋은 동료들이 있다면 더 좋겠지만...  ^^)  
 그리고 나처럼 나이가 많은 개발자는 AI를 활용하면서 경쟁자들 보다 더욱 빠르게 신기술을 익히지 않으면 경쟁에서 도태될 것이 틀림없다. 정신 바짝 차려야함!  
@@ -114,9 +163,6 @@ ChatGPT를 비롯한 AI가 정말 좋은게 수준이 너무 낮은 질문이라
 
 ## 자바스크립트 객체 메서드 정의 방법
 자바스크립트에서는 객체 내부에 메서드를 정의하는 두 가지 방법이 있습니다. 각각의 방식과 차이점을 살펴보겠습니다.
-
----
-
 ### **1. 기존 방식 (ES5)**
 ```javascript
 {
@@ -174,15 +220,19 @@ obj2.data(); // ES6 방식
 - 최신 문법(ES6)의 축약형 `data()`를 사용하는 것이 더 간결하고 가독성이 좋습니다.  
 - 여전히 ES5 문법을 사용할 수는 있지만, 새 프로젝트에서는 **ES6 방식을 추천**합니다.  
 
-# 2.x에서 보이던 Vue객체가 안보여서 2와 3의 Vue객체 차이에 대해 물어봤다. 
-import { aaa } from 'vue'
+# 2.x에서 보이던 Vue 전역 객체가 안보여서 2와 3의 Vue객체 차이에 대해 물어봤다. 
+import { createApp } from 'vue'
 위 임포트 구문에서 'vue'를 따라가보면 vue.d.ts라는 파일이 있는데 그 안에 Vue객체가 든게 맞지?  
+(이 질문을 gpt에게 할 때까지 Vue 글로벌 빌드의 존재를 몰랐다)
 
 위 구문에서 'vue'는 Vue 패키지를 의미합니다. 이 패키지는 node_modules/vue 디렉터리 아래에 위치하며, 해당 디렉터리 내의 타입 정의 파일인 vue.d.ts를 참조합니다.
 
 Vue 3에서는 Vue 객체가 기본적으로 더 이상 제공되지 않습니다. 대신 Composition API와 setup 함수를 기반으로 한 사용 방식이 주로 권장됩니다. Vue 2.x에서는 Vue라는 클래스를 직접 인스턴스화하여 사용할 수 있었지만, Vue 3에서는 이러한 접근이 변경되었습니다.  
 
-(아하.. 그래서 2.x에서만 보였던 거구만!)  
+(아하.. 그래서 2.x에서만 보였던 거구만! 이라고 생각했는데 3.x에서도 글로벌빌드로 Vue를 임포트 한 경우 Vue전역객체가 있다. 글로벌 빌드인 경우 Vue.createApp으로 인스턴스를 생성함)
+
+또한 다음과 같이 임포트 구문을 사용하면 일반 빌드에서도 글로벌빌드마냥 Vue.createApp을 할 수 있나본데 이렇게 쓰는건 비추라고 한다.  
+import Vue from 'vue'
 
 # Vue 2.x vs Vue 3.x 주요 차이점
 
